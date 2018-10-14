@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cadastro Alunos</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="css/bootstrap-select.min.css">
+<link rel="stylesheet" href="css/bootstrap-confirm-delete.css"/>
+
+</head>
+<body>
+	<section class="form-control" style="margin:20px auto; width:80%; height:auto; border: 1px solid blue; border-radius: 10px; box-shadow: 5px 5px 5px rgba(0,0,0,0.5);">
+		<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+		  <li class="nav-item">
+		    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Cadastros</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="pills-search-tab" data-toggle="pill" href="#pills-search" role="tab" onclick="carregarTabela();" aria-controls="pills-search" aria-selected="false">Listar</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Faltas</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Notas</a>
+		  </li>
+		</ul>
+		<div class="tab-content" id="pills-tabContent">
+		
+			<!-- Tab Cadastro -->
+		  	<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+				<div class="needs-validation">
+				
+					<div class="form-row">
+				    	<div class="col-md-4 mb-3">
+				      		<label for="validationTooltip01">ID</label>
+				      		<input type="text" class="form-control" id="txtId" disabled />
+				    	</div>
+				    	
+				    	<div class="col-md-8 mb-3">
+				    		<label for="validationTooltip01">Selecionar aluno</label><br/>
+				    		<select id="selectAlunos" class="selectpicker" data-width="100%" data-live-search="true" onchange="ddlAlunos()">
+								  <option value="0">Selecione um aluno</option>
+							</select>				    		
+				    	</div>				    	
+			  		</div>
+				
+					<div class="form-row">
+				    	<div class="col-md-12 mb-3">
+				      		<label for="txtNome">Nome</label>
+				      		<input type="text" class="form-control" id="txtNome" placeholder="Digite o nome" />
+				      		<div class="valid-tooltip">
+				        		Digite o nome do aluno
+				      		</div>
+				    	</div>				    
+			  		</div>
+			  		
+			  		<div class="form-row">
+				   		<div class="col-md-12 mb-3">
+				      		<label for="txtEmail">Email</label>
+				      		<div class="input-group">
+				        		<div class="input-group-prepend">
+				          			<span class="input-group-text">@</span>
+				        		</div>
+				        		<input type="text" class="form-control" id="txtEmail" placeholder="Email do aluno" aria-describedby="validationTooltipUsernamePrepend" />
+				        		<div class="invalid-tooltip">
+				          			Digite o email do aluno
+				        		</div>
+				      		</div>
+				    	</div>
+				  	</div>
+				  	
+				  	<div class="form-row">
+				    	<div class="col-md-12 mb-3">
+				      		<label for="txtCurso">Curso</label>
+				      		<input type="text" class="form-control" id="txtCurso" placeholder="Digite o nome do curso" class="valid-tooltip" />				        
+				      	</div>
+				    </div>
+				    
+				    <div class="col-md-12 mb-3" style="padding-right: 0; text-align: right;">				    	
+				  		<button class="btn btn-info" style="float:rigth;" onclick="salvarAluno();">Salvar</button>
+				  		<button class="btn btn-danger" data-toggle="modal" data-target="#confirm" style="float:rigth; margin-rigth:15px;">Deletar</button>
+				  	</div>
+				  	
+					<div class="modal fade" id="confirm" role="dialog">
+					  	<div class="modal-dialog modal-md">
+					    	<div class="modal-content">
+					      		<div class="modal-body">
+					            	<p>Deseja realmente excluir o aluno?</p>
+					      		</div>
+					      		<div class="modal-footer">
+					        		<button type="button" class="btn btn-danger" id="delete" onclick="deletarAluno();" data-dismiss="modal">Confirmar</button>
+					            	<button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
+					      		</div>
+					    	</div>					
+					  	</div>
+					</div>
+					
+				</div>				
+			</div>
+			
+			<!-- Tab Listar -->
+			<div class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
+
+				<table class="table table-hover table-striped table-hover table-sm">
+				  <thead class="bg-primary" style="color: white;">
+				    <tr>
+				      <th scope="col">ID</th>
+				      <th scope="col">Nome</th>
+				      <th scope="col">Email</th>
+				      <th scope="col">Curso</th>
+				      <th scope="col">Cadastro</th>
+				      <th scope="col">Faltas</th>
+				    </tr>
+				  </thead>
+				  <tbody id="tabelaAlunos">
+				    
+				  </tbody>
+				</table>
+
+		  	</div>
+			
+			<!-- Tab Cadastrar Falta -->
+		  	<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+		  		
+	  			<div class="form-row">
+			    	<div class="col-md-6 mb-3">
+			      		<label for="validationTooltip01">Selecionar aluno</label><br/>
+			    		<select id="selectFaltaAlunos" class="selectpicker" data-width="100%" data-live-search="true" onchange="ddlFaltaAlunos()">
+						  	<option value="0">Selecione um aluno</option>
+						</select>
+			    	</div>
+			    	
+			    	<div class="col-md-6 mb-3">
+			    		<label for="validationTooltip01">Selecione a data da falta</label><br/>
+			    		<select id="selectDataFaltas" class="selectpicker" data-width="100%" data-live-search="true">
+						  	<option value="0">Selecione um aluno para visualizar as faltas</option>
+						</select>
+			    	</div>				    	
+		  		</div>
+		  		
+	  			<div class="form-row">
+			    	<div class="col-md-4 mb-3">
+			    		<label for="validationTooltip01">Data</label><br/>
+				        <span id="spanDataFalta"></span>	      
+			    	</div>
+		    	</div>
+		    	
+		    	<div class="col-md-12 mb-3" style="padding-right: 0; text-align: right;">				    	
+			  		<button class="btn btn-info" style="float:left; margin-left:-15px;" onclick="incluirFalta();">Incluir Falta</button>
+			  		<button class="btn btn-danger" style="float:rigth; margin-rigth:15px;" onclick="deletarFalta();">Deletar</button>
+			  	</div>
+		    		
+		  	</div>
+		  	
+		  	<!-- Tab Cadastrar Nota -->
+		  	<div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+		  	
+		  		<div class="form-row">
+			    	<div class="col-md-6 mb-3">
+			      		<label for="validationTooltip01">Selecionar aluno</label><br/>
+			    		<select id="selectNotaAlunos" class="selectpicker" data-width="100%" data-live-search="true" onchange="carregarTabelaNotas()">
+						  	<option value="0">Selecione um aluno</option>
+						</select>
+			    	</div>	
+			    	<div class="col-md-5 mb-3">
+			      		<label for="validationTooltip01">Informe a Nota</label><br/>
+			    		<input type="text" class="form-control" id="txtNotaAluno" placeholder="Digite a nota" />
+			    	</div>	
+			    	<div class="col-md-1 mb-3">
+			      		<br/>
+			    		<button class="btn btn-info" style="margin-top: 8px;" onclick="incluirNota();">Salvar</button>
+			    	</div>			    			    			    	
+		  		</div>
+		  		
+		  		<table class="table table-hover table-striped table-hover table-sm">
+				  <thead class="bg-primary" style="color: white;">
+				    <tr>
+				      <th scope="col">ID</th>
+				      <th scope="col">Nome</th>				      
+				      <th scope="col">Curso</th>				      
+				      <th scope="col">Notas</th>
+				    </tr>
+				  </thead>
+				  <tbody id="tabelaNotaAlunos">
+				    
+				  </tbody>
+				</table>
+		  	</div>
+		</div>
+	</section>
+	
+	<div style="margin:40px auto; width:80%;">
+		<h4>Trabalho N1-B2 - EC7 - FTT - Linguagem de Programação III</h4>
+		<span>Lucas Silva</span><br/>
+		<span>Rafael Barroso</span><br/>
+		<span>William Honorato</span>
+	</div>
+
+<script type="text/javascript" src="js/control.js"></script>
+<script type="text/javascript" src="js/jquery-3.3.1.slim.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="js/bootstrap-select.min.js"></script>
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="js/bootstrap-confirm-delete.js"></script>
+</body>
+</html>
